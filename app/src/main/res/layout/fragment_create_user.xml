@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    android:layout_height="match_parent"
+    tools:context=".presentation.fragment.auth.CreateUserFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/iconImageAuth"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            app:srcCompat="@drawable/icon_appname"
+            />
+        <TextView
+            android:id="@+id/bio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Akkaunt yaratish uchun quyidagi ma'lumotlarni to'ldiring"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="88dp"
+            android:layout_marginTop="77dp"
+            android:fontFamily="@font/inter"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/username_text_input"
+            style="@style/LoginTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/bio"
+            android:layout_marginHorizontal="16dp"
+            app:cursorColor="@color/button_bg"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Username" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/lastname_text_input"
+            style="@style/LoginTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/username_text_input"
+            android:layout_marginHorizontal="16dp"
+            app:cursorColor="@color/button_bg"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/last_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Lastname" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phoneNumber_text_input"
+            style="@style/LoginTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/lastname_text_input"
+            android:layout_marginHorizontal="16dp"
+            app:cursorColor="@color/button_bg"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phoneNumber_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Phone Number"
+                android:inputType="phone"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password1_text_input"
+            style="@style/LoginTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/phoneNumber_text_input"
+            android:layout_marginHorizontal="16dp"
+            app:cursorColor="@color/button_bg"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password1_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Parol"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password2_text_input"
+            style="@style/LoginTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/password1_text_input"
+            android:layout_marginHorizontal="16dp"
+            app:cursorColor="@color/button_bg"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password2_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Parolni tasdiqlash"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <Button
+            android:id="@+id/yaratish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#262A85"
+            android:layout_marginTop="28dp"
+            android:text="Yaratish"
+            android:fontFamily="@font/inter"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/password2_text_input"
+            android:layout_marginHorizontal="16dp"
+            />
+        <ProgressBar
+            android:visibility="invisible"
+            android:id="@+id/progressRG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Ro'yhatdan o'tish"
+            android:textAllCaps="false"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/password2_text_input"
+            android:layout_marginHorizontal="16dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rg_navigation"
+    app:startDestination="@id/authFragment">
+
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.talabalardaftari.tdcleanhilt.presentation.fragment.auth.AuthFragment"
+        android:label="fragment_auth"
+        tools:layout="@layout/fragment_auth" >
+        <action
+            android:id="@+id/action_authFragment_to_confirmFragment"
+            app:destination="@id/confirmFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/confirmFragment"
+        android:name="com.talabalardaftari.tdcleanhilt.presentation.fragment.auth.ConfirmFragment"
+        android:label="fragment_confirm"
+        tools:layout="@layout/fragment_confirm" >
+        <action
+            android:id="@+id/action_confirmFragment_to_createUserFragment"
+            app:destination="@id/createUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createUserFragment"
+        android:name="com.talabalardaftari.tdcleanhilt.presentation.fragment.auth.CreateUserFragment"
+        android:label="fragment_create_user"
+        tools:layout="@layout/fragment_create_user" />
+</navigation>
