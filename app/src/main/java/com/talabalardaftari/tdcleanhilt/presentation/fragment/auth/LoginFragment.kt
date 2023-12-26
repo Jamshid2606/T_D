@@ -1,28 +1,41 @@
 package com.talabalardaftari.tdcleanhilt.presentation.fragment.auth
 
-import android.widget.Button
-import android.widget.ProgressBar
+import android.content.Intent
+import androidx.fragment.app.viewModels
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.talabalardaftari.tdcleanhilt.data.auth.model.request.LoginRequest
+import com.talabalardaftari.tdcleanhilt.data.base.BaseNetworkResult
+import com.talabalardaftari.tdcleanhilt.data.base.SharedPref
+import com.talabalardaftari.tdcleanhilt.data.base.hide
+import com.talabalardaftari.tdcleanhilt.data.base.show
+import com.talabalardaftari.tdcleanhilt.data.base.snackbar
+import com.talabalardaftari.tdcleanhilt.data.base.toast
 import com.talabalardaftari.tdcleanhilt.databinding.FragmentLoginBinding
+import com.talabalardaftari.tdcleanhilt.presentation.activity.MainActivity
+import com.talabalardaftari.tdcleanhilt.presentation.activity.SplashActivity2
 import com.talabalardaftari.tdcleanhilt.presentation.fragment.BaseFragment
+import com.talabalardaftari.tdcleanhilt.presentation.vm.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
-    private lateinit var loginBtnClickListener:(username:String, password:String,progress:ProgressBar, login:Button) -> Unit
-
-    fun loginBtnClickListener(listener:((username:String, password:String,progress:ProgressBar, login:Button) -> Unit)) {
-        loginBtnClickListener = listener
+    private val viewmodel : AuthViewModel by viewModels()
+    private val shared by lazy {
+        SharedPref(requireContext())
     }
     override fun onViewCreate() {
+        observer()
         binding.login.setOnClickListener {
             if (validation()){
-                loginBtnClickListener.invoke(binding.usernameEditText.text.toString(), binding.passwordEditText.text.toString(), binding.progressLGG, binding.login)
+                viewmodel.login(LoginRequest(
+                    username = binding.usernameEditText.text.toString(),
+                    password = binding.passwordEditText.text.toString()
+                ))
             }
         }
     }
-    fun validation():Boolean{
+    private fun validation():Boolean{
         if (binding.usernameEditText.text==null){
             YoYo.with(Techniques.Wobble).duration(500).repeat(0).playOn(binding.usernameEditText)
             return false
@@ -31,5 +44,30 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             return false
         }
         return true
+    }
+    private fun observer() {
+        viewmodel.login.observe(viewLifecycleOwner){state->
+            when(state){
+                is BaseNetworkResult.Error -> {
+                    toast(state.message)
+                    binding.progressLGG.hide()
+                    binding.login.show()
+                }
+                is BaseNetworkResult.Loading -> {
+                    binding.progressLGG.show()
+                    binding.login.hide()
+                }
+                is BaseNetworkResult.Success -> {
+                    binding.progressLGG.hide()
+                    binding.login.show()
+                    if (state.data!=null){
+                        shared.setToken(state.data.id_token)
+                        snackbar("Successfully", binding.root)
+                        val intent = Intent(requireActivity(), SplashActivity2::class.java)
+                        requireActivity().startActivity(intent)
+                    }
+                }
+            }
+        }
     }
 }

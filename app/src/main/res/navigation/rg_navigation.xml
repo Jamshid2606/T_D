@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_auth" >
         <action
             android:id="@+id/action_authFragment_to_confirmFragment"
-            app:destination="@id/confirmFragment" />
+            app:destination="@id/confirmFragment"
+
+            />
     </fragment>
     <fragment
         android:id="@+id/confirmFragment"
@@ -21,11 +23,23 @@
         tools:layout="@layout/fragment_confirm" >
         <action
             android:id="@+id/action_confirmFragment_to_createUserFragment"
-            app:destination="@id/createUserFragment" />
+            app:destination="@id/createUserFragment"
+            app:popUpTo="@id/authFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/createUserFragment"
         android:name="com.talabalardaftari.tdcleanhilt.presentation.fragment.auth.CreateUserFragment"
         android:label="fragment_create_user"
         tools:layout="@layout/fragment_create_user" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.talabalardaftari.tdcleanhilt.presentation.fragment.auth.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.talabalardaftari.tdcleanhilt.presentation.fragment.auth.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>

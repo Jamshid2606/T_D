@@ -8,8 +8,10 @@ import com.talabalardaftari.tdcleanhilt.data.auth.model.response.RegisterUserRes
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.Field
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface AuthService {
@@ -22,6 +24,6 @@ interface AuthService {
     fun registration(@Body registerUserRequest: RegisterUserRequest): Observable<RegisterUserResponse>
     @POST("/auth/login")
     fun login(@Body loginRequest: LoginRequest): Observable<LoginResponse>
-//    @GET("/student/username_exists?username={username}")
-//    fun usernameExists(@Path("username") username:String): Flow<Boolean>
+    @GET("/student/username_exists")
+    fun usernameExists(@Query("username") username:String): Observable<Boolean>
 }

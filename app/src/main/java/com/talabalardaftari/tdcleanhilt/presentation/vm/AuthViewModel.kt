@@ -30,6 +30,9 @@ class AuthViewModel @Inject constructor(
     private val _login = MutableLiveData<BaseNetworkResult<LoginResponse>>()
     val login:LiveData<BaseNetworkResult<LoginResponse>>
         get() = _login
+    private val _usernameExists = MutableLiveData<BaseNetworkResult<Boolean>>()
+    val usernameExists : LiveData<BaseNetworkResult<Boolean>>
+        get() = _usernameExists
 
     fun sendEmail(email:String){
         _sendEmail.value = BaseNetworkResult.Loading(true)
@@ -112,6 +115,27 @@ class AuthViewModel @Inject constructor(
                     }else{
                         _login.value = BaseNetworkResult.Error("Response data is null")
                         Log.d("AuthViewModel, login data is null", it.message.toString())
+                    }
+                }
+            }
+        }
+    }
+    fun usernameExists(username:String){
+        _usernameExists.value = BaseNetworkResult.Loading(false)
+        authUseCase.usernameExists(username).observeForever {
+            when(it){
+                is BaseNetworkResult.Error -> {
+                    _usernameExists.value = BaseNetworkResult.Error(it.message)
+                }
+                is BaseNetworkResult.Loading -> {
+                    _usernameExists.value = BaseNetworkResult.Loading(it.isLoading)
+                }
+                is BaseNetworkResult.Success -> {
+                    if (it.data!=null){
+                        _usernameExists.value = BaseNetworkResult.Success(it.data)
+                    }else{
+                        _usernameExists.value = BaseNetworkResult.Error("AuthViewModel, usernameExists data is null")
+                        Log.d("AuthViewModel, usernameExists data is null", it.message.toString())
                     }
                 }
             }

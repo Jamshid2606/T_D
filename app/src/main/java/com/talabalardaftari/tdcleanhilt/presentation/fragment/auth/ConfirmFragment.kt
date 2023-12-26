@@ -1,5 +1,7 @@
 package com.talabalardaftari.tdcleanhilt.presentation.fragment.auth
 
+import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import com.talabalardaftari.tdcleanhilt.R
 import com.talabalardaftari.tdcleanhilt.data.auth.model.request.VerifyEmailRequest
@@ -30,6 +32,14 @@ class ConfirmFragment : BaseFragment<FragmentConfirmBinding>(FragmentConfirmBind
                 ))
             }
         }
+//        requireActivity()
+//            .onBackPressedDispatcher
+//            .addCallback(this, object :OnBackPressedCallback(true){
+//                override fun handleOnBackPressed() {
+//                    Log.d("Confirm Fragment", "Fragment back pressed invoked")
+//                    navController.popBackStack()
+//                }
+//            })
     }
 
     private fun observer() {

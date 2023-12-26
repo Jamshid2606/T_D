@@ -14,6 +14,7 @@ import com.talabalardaftari.tdcleanhilt.data.base.toast
 import com.talabalardaftari.tdcleanhilt.data.base.validatePhoneNumber
 import com.talabalardaftari.tdcleanhilt.databinding.FragmentCreateUserBinding
 import com.talabalardaftari.tdcleanhilt.presentation.activity.MainActivity
+import com.talabalardaftari.tdcleanhilt.presentation.activity.SplashActivity2
 import com.talabalardaftari.tdcleanhilt.presentation.fragment.BaseFragment
 import com.talabalardaftari.tdcleanhilt.presentation.vm.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,20 +30,37 @@ class CreateUserFragment : BaseFragment<FragmentCreateUserBinding>(FragmentCreat
         observer()
         binding.yaratish.setOnClickListener {
             if (validation()){
-                val registerUserRequest = RegisterUserRequest(
-                    email = shared.getEmail().toString(),
-                    firstName = shared.getName().toString(),
-                    lastName = binding.lastNameEditText.text.toString(),
-                    password = binding.password1EditText.text.toString(),
-                    phoneNumber = binding.phoneNumberEditText.text.toString(),
-                    username = binding.userNameEditText.text.toString()
-                )
-                viewmodel.registration(registerUserRequest)
+                viewmodel.usernameExists(binding.userNameEditText.text.toString())
             }
         }
     }
 
     private fun observer() {
+        viewmodel.usernameExists.observe(viewLifecycleOwner){state->
+            when(state){
+                is BaseNetworkResult.Error -> {
+                    binding.yaratish.show()
+                    binding.progressRG.hide()
+                    toast(state.message)
+                }
+                is BaseNetworkResult.Loading -> {
+                    binding.yaratish.hide()
+                    binding.progressRG.show()
+                }
+                is BaseNetworkResult.Success -> {
+                    viewmodel.registration(
+                        RegisterUserRequest(
+                            email = shared.getEmail().toString(),
+                            firstName = shared.getName().toString(),
+                            lastName = binding.lastNameEditText.text.toString(),
+                            password = binding.password1EditText.text.toString(),
+                            phoneNumber = binding.phoneNumberEditText.text.toString(),
+                            username = binding.userNameEditText.text.toString()
+                        )
+                    )
+                }
+            }
+        }
         viewmodel.registration.observe(viewLifecycleOwner){state->
             when(state){
                 is BaseNetworkResult.Error -> {
@@ -79,7 +97,7 @@ class CreateUserFragment : BaseFragment<FragmentCreateUserBinding>(FragmentCreat
                     if (state.data!=null){
                         shared.setToken(state.data.id_token)
                     }
-                    val intent = Intent(requireActivity(), MainActivity::class.java)
+                    val intent = Intent(requireActivity(), SplashActivity2::class.java)
                     requireActivity().startActivity(intent)
                     requireActivity().finish()
                 }

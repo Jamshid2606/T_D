@@ -1,5 +1,6 @@
 package com.talabalardaftari.tdcleanhilt.data.auth
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.talabalardaftari.tdcleanhilt.data.auth.model.request.LoginRequest
@@ -13,8 +14,10 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 import javax.inject.Inject
+
 
 class AuthRepositoryImpl @Inject constructor(private val authService:AuthService) : AuthRepository {
     override fun sendEmail(email: String): LiveData<BaseNetworkResult<String>> {
@@ -63,6 +66,7 @@ class AuthRepositoryImpl @Inject constructor(private val authService:AuthService
         return responsse
     }
 
+    @SuppressLint("CheckResult")
     override fun registration(registerUserRequest: RegisterUserRequest): LiveData<BaseNetworkResult<RegisterUserResponse>> {
         val response = MutableLiveData<BaseNetworkResult<RegisterUserResponse>>()
         response.value = BaseNetworkResult.Loading(true)
@@ -72,16 +76,21 @@ class AuthRepositoryImpl @Inject constructor(private val authService:AuthService
             .doOnComplete {
                 response.value = BaseNetworkResult.Loading(false)
             }
-            .doOnError {
-                response.value = BaseNetworkResult.Error(it.message)
-            }
-            .doOnNext {
-                response.value = BaseNetworkResult.Success(it)
-            }
-            .subscribe()
+            .subscribe(
+                {
+                    response.value = BaseNetworkResult.Success(it)
+                },
+                {
+                    if ((it as HttpException).code()==500){
+                        response.value = BaseNetworkResult.Error("Bunday telefon raqamiga ega foydalanuvchi mavjud")
+                    }
+                    response.value = BaseNetworkResult.Error(it.message)
+                }
+            )
         return response
     }
 
+    @SuppressLint("CheckResult")
     override fun login(loginRequest: LoginRequest): LiveData<BaseNetworkResult<LoginResponse>> {
         val response = MutableLiveData<BaseNetworkResult<LoginResponse>>()
         response.value = BaseNetworkResult.Loading(true)
@@ -91,13 +100,35 @@ class AuthRepositoryImpl @Inject constructor(private val authService:AuthService
             .doOnComplete {
                 response.value = BaseNetworkResult.Loading(false)
             }
-            .doOnError {
-                response.value = BaseNetworkResult.Error(it.message)
-            }
-            .doOnNext {
+            .subscribe(
+            {
                 response.value = BaseNetworkResult.Success(it)
-            }
-            .subscribe()
+            },
+            {
+                if ((it as HttpException).code()==403){
+                    response.value = BaseNetworkResult.Error("Username yoki parol xato kiritildi")
+                }
+                response.value = BaseNetworkResult.Error(it.message)
+            })
+        return response
+    }
+
+    @SuppressLint("CheckResult")
+    override fun usernameExists(username: String): LiveData<BaseNetworkResult<Boolean>> {
+        val response = MutableLiveData<BaseNetworkResult<Boolean>>()
+        response.value = BaseNetworkResult.Loading(true)
+        authService.usernameExists(username)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnComplete { response.value = BaseNetworkResult.Loading(false) }
+            .subscribe(
+                {
+                    response.value = BaseNetworkResult.Success(it)
+                },
+                {
+                    response.value = BaseNetworkResult.Error(it.message)
+                }
+            )
         return response
     }
 }

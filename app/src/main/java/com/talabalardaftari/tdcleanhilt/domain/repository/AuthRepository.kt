@@ -13,4 +13,5 @@ interface AuthRepository {
     fun verifyEmail(verifyEmailRequest: VerifyEmailRequest) : LiveData<BaseNetworkResult<Boolean>>
     fun registration(registerUserRequest: RegisterUserRequest):LiveData<BaseNetworkResult<RegisterUserResponse>>
     fun login(loginRequest: LoginRequest):LiveData<BaseNetworkResult<LoginResponse>>
+    fun usernameExists(username:String):LiveData<BaseNetworkResult<Boolean>>
 }

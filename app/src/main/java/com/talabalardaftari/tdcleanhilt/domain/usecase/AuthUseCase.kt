@@ -23,4 +23,7 @@ class AuthUseCase @Inject constructor(private val authRepository: AuthRepository
     fun login(loginRequest: LoginRequest) : LiveData<BaseNetworkResult<LoginResponse>>{
         return authRepository.login(loginRequest)
     }
+    fun usernameExists(username:String) : LiveData<BaseNetworkResult<Boolean>>{
+        return authRepository.usernameExists(username)
+    }
 }
