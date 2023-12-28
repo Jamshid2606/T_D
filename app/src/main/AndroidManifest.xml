@@ -20,13 +20,13 @@
             android:name=".presentation.activity.SplashActivity2"
             android:exported="false" />
         <activity
-            android:name=".presentation.activity.MainActivity"
+            android:name=".presentation.activity.AuthActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.activity.SplashActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.activity.AuthActivity"
+            android:name=".presentation.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

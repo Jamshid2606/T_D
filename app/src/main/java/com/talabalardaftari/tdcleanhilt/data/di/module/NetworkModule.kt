@@ -4,6 +4,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.talabalardaftari.tdcleanhilt.BuildConfig
 import com.talabalardaftari.tdcleanhilt.data.auth.AuthService
+import com.talabalardaftari.tdcleanhilt.data.main.Datas
+import com.talabalardaftari.tdcleanhilt.data.main.MainService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,18 +21,21 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-
     @Provides
     fun provideRetrofit(httpLoggingInterceptor: HttpLoggingInterceptor): Retrofit {
         return Retrofit.Builder().apply {
             baseUrl(BuildConfig.BASE_URL)
-            client(OkHttpClient.Builder().addNetworkInterceptor(httpLoggingInterceptor).build())
+            client(
+                OkHttpClient.Builder().addNetworkInterceptor(httpLoggingInterceptor).build())
 //                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(OkHttpClient.Builder().addInterceptor(Datas.BearerTokenInterceptor()).build())
         }.build()
     }
+
+
     @Provides
     fun provideGsonBuilder(): Gson {
         return GsonBuilder()
@@ -49,5 +54,9 @@ object NetworkModule {
     @Provides
     fun provideAuthService(retrofit: Retrofit):AuthService{
         return retrofit.create(AuthService::class.java)
+    }
+    @Provides
+    fun provideMainService(retrofit: Retrofit):MainService{
+        return retrofit.create(MainService::class.java)
     }
 }

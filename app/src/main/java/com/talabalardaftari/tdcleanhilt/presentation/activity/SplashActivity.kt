@@ -7,6 +7,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.talabalardaftari.tdcleanhilt.R
 import com.talabalardaftari.tdcleanhilt.data.base.SharedPref
+import com.talabalardaftari.tdcleanhilt.data.main.Datas
 import com.talabalardaftari.tdcleanhilt.databinding.ActivitySplashBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,6 +21,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Datas.setAuthorizationToken(sharedPref.getToken().toString())
         val anim = AnimationUtils.loadAnimation(this,R.anim.fade_in)
         anim.setAnimationListener(object : Animation.AnimationListener{
             override fun onAnimationStart(p0: Animation?) {}
