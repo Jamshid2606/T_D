@@ -2,4 +2,12 @@
     <string name="app_name">TD clean Hilt</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="o_quv_joyingizni_tanlang">O\'quv joyingizni tanlang</string>
+    <string-array name="Studys">
+        <item>Universitet</item>
+        <item>Kollej</item>
+        <item>Litsey</item>
+        <item>Maktab</item>
+        <item>Abituriyent</item>
+    </string-array>
 </resources>

@@ -16,7 +16,7 @@ object Datas {
         override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
             val originalRequest = chain.request()
             val newRequest = originalRequest.newBuilder()
-                .header("Authorization", "Bearer $authorizationToken")  // Bearer Tokenni qo'shish
+                .header("Authorization", "Bearer ${getAuthorizationToken()}")  // Bearer Tokenni qo'shish
                 .build()
             return chain.proceed(newRequest)
         }

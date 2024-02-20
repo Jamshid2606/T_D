@@ -1,22 +1,19 @@
 package com.talabalardaftari.tdcleanhilt.presentation.fragment.main
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.provider.MediaStore
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
+import android.content.pm.PackageManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
-import androidx.core.view.get
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.talabalardaftari.tdcleanhilt.R
 import com.talabalardaftari.tdcleanhilt.data.base.BaseNetworkResult
-import com.talabalardaftari.tdcleanhilt.data.base.SharedPref
 import com.talabalardaftari.tdcleanhilt.data.base.hide
 import com.talabalardaftari.tdcleanhilt.data.base.show
 import com.talabalardaftari.tdcleanhilt.data.base.toast
@@ -24,37 +21,35 @@ import com.talabalardaftari.tdcleanhilt.data.main.model.request.AddNoteBookReque
 import com.talabalardaftari.tdcleanhilt.databinding.FragmentAddNoteBookBinding
 import com.talabalardaftari.tdcleanhilt.presentation.adapters.AddNoteBookAdapter
 import com.talabalardaftari.tdcleanhilt.presentation.fragment.BaseFragment
-import com.talabalardaftari.tdcleanhilt.presentation.vm.AuthViewModel
 import com.talabalardaftari.tdcleanhilt.presentation.vm.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import java.io.InputStream
+import java.io.FileOutputStream
+
 
 @AndroidEntryPoint
 class AddNoteBookFragment : BaseFragment<FragmentAddNoteBookBinding>(FragmentAddNoteBookBinding::inflate) {
     private val viewmodel : MainViewModel by viewModels()
     private lateinit var adapter: AddNoteBookAdapter
     private var imagePath:String=""
-    private val imagePickerLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-            handleImageResult(result.data)
-        }
-    }
+    private lateinit var imagePickerLauncher : ActivityResultLauncher<Intent>
     override fun onViewCreate() {
         initAdapter()
         observer()
+        addNoteResultLauncher()
         binding.saqlash.setOnClickListener {
             if (validation()){
-                toast(imagePath)
-                val imageFile = File(imagePath.toUri().path.toString())
-                val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
-                val imageBody = MultipartBody.Part.createFormData("image", imageFile.name, requestFile)
-                viewmodel.saveAttachment(imageBody)
+                val filesDir = requireContext().filesDir
+                val file = File(filesDir,"image.png")
+                val inputStream = requireActivity().contentResolver.openInputStream(imagePath.toUri())
+                val outputStream = FileOutputStream(file)
+                inputStream!!.copyTo(outputStream)
+                val requestbody = file.asRequestBody("image/*".toMediaTypeOrNull())
+                val part = MultipartBody.Part.createFormData("file",file.name,requestbody)
+                viewmodel.saveAttachment(part)
             }
         }
     }
@@ -117,27 +112,58 @@ class AddNoteBookFragment : BaseFragment<FragmentAddNoteBookBinding>(FragmentAdd
         }
         return true
     }
+    private fun addNoteResultLauncher(){
+        imagePickerLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                try {
+                    imagePath = result.data!!.data.toString()
+                    Glide.with(this)
+                        .load(imagePath)
+                        .into(binding.imgUr)
+                    binding.imgUr.show()
+                } catch (e:Exception){
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
 
     private fun pickImageFromGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        imagePickerLauncher.launch(intent)
+        val galleryIntent = Intent(Intent.ACTION_PICK)
+        galleryIntent.setType("image/*")
+        imagePickerLauncher.launch(galleryIntent)
+//        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//        imagePickerLauncher.launch(intent)
     }
-    private fun handleImageResult(data: Intent?) {
-        if (data != null && data.data != null) {
-            // Rasm manzili
-            imagePath = data.data.toString()
-            // Rasmni ImageView ga joylash
-            // (Bu joylashni o'zgartiring, masalan, Glide yoki Picasso bilan)
-            Glide.with(this)
-                .load(data.data)
-                .into(binding.imgUr)
-            binding.imgUr.show()
+    private fun checkStoragePermissionAndGetImage(){
+        if (ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+        }else{
+            pickImageFromGallery()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1){
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                pickImageFromGallery()
+            }else{
+                toast("Storage permission is denided, please allow permission to get image")
+            }
         }
     }
     private fun initAdapter(){
-        adapter = AddNoteBookAdapter(){position->
+        adapter = AddNoteBookAdapter { position->
             if (position==0){
-                pickImageFromGallery()
+                checkStoragePermissionAndGetImage()
             }
         }
         val list = ArrayList<Int>()

@@ -1,82 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:fillViewport="true"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.fragment.main.AddNoteBookFragment">
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nom_text_input"
-        style="@style/LoginTextInputLayoutStyle"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:tooltipText="Daftar nomi"
-        android:layout_marginHorizontal="10dp"
-        android:layout_height="wrap_content"
-        >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/nom_edit_text"
+        android:layout_height="match_parent">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nom_text_input"
+            style="@style/LoginTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:tooltipText="Daftar nomi"
+            android:layout_marginHorizontal="10dp"
+            android:layout_height="wrap_content"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nom_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nom" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nom" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <TextView
-        android:id="@+id/txt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Daftar uchun rasmlardan birini tanlang yoki galereyadan yuklab oling"
-        app:layout_constraintTop_toBottomOf="@+id/nom_text_input"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/inter"
-        android:textSize="16dp"
-        android:gravity="center"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/list"/>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/txt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/imgUr"/>
-    <androidx.constraintlayout.utils.widget.ImageFilterView
-        android:id="@+id/imgUr"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/list"
-        app:layout_constraintBottom_toTopOf="@+id/saqlash"
-        android:layout_marginTop="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-    <Button
-        android:id="@+id/saqlash"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#262A85"
-        android:text="Saqlash"
-        android:fontFamily="@font/inter"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/imgUr"
-        android:layout_marginHorizontal="10dp"
-        />
-    <ProgressBar
-        android:visibility="invisible"
-        android:id="@+id/progressLGG"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ro'yhatdan o'tish"
-        android:textAllCaps="false"
-        android:fontFamily="@font/inter"
-        app:layout_constraintTop_toBottomOf="@+id/imgUr"
-        android:textColor="@color/white"
-        android:layout_marginHorizontal="10dp"
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:text="Daftar uchun rasmlardan birini tanlang yoki galereyadan yuklab oling"
+            app:layout_constraintTop_toBottomOf="@+id/nom_text_input"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/inter"
+            android:textSize="16dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/list"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/txt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="40dp"
+            app:layout_constraintBottom_toTopOf="@+id/imgUr"/>
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/imgUr"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/list"
+            app:layout_constraintBottom_toTopOf="@+id/saqlash"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+        <Button
+            android:id="@+id/saqlash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#262A85"
+            android:text="Saqlash"
+            android:fontFamily="@font/inter"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/imgUr"
+            android:layout_marginHorizontal="10dp"
+            />
+        <ProgressBar
+            android:visibility="invisible"
+            android:id="@+id/progressLGG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ro'yhatdan o'tish"
+            android:textAllCaps="false"
+            android:fontFamily="@font/inter"
+            app:layout_constraintTop_toBottomOf="@+id/imgUr"
+            android:textColor="@color/white"
+            android:layout_marginHorizontal="10dp"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
